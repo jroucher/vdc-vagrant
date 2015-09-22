@@ -70,15 +70,10 @@ Vagrant.configure(2) do |config|
      rpm -ivh http://yum.puppetlabs.com/puppetlabs-release-pc1-el-6.noarch.rpm
      yum install -y puppet
      yum install -y git
-     git clone https://juaningan:20bfa4250edeb51f53834ecd7d9456661cac3441@github.com/juaningan/vdc-mars-bootstrap
-     export FACTER_PUPADIR=$(echo $PWD/vdc-mars-bootstrap)
+     git clone https://juaningan:20bfa4250edeb51f53834ecd7d9456661cac3441@github.com/Telefonica/vdc-puppet-bootstrap
+     export FACTER_PUPADIR=$(echo $PWD/vdc-puppet-bootstrap)
      /opt/puppetlabs/puppet/bin/puppet apply ${FACTER_PUPADIR}/manifests/puppet.pp
      /opt/puppetlabs/puppet/bin/puppet apply ${FACTER_PUPADIR}/manifests/r10k.pp
-  SHELL
-
-  config.vm.provision "puppet-apply", type: "shell", inline: <<-SHELL
-     /opt/puppetlabs/puppet/bin/r10k deploy environment -pv
-     /opt/puppetlabs/puppet/bin/puppet apply /etc/puppetlabs/code/environments/development/manifests/site.pp --environment=development
   SHELL
 
   config.vm.provision "extra", type: "shell", inline: <<-SHELL
@@ -109,4 +104,10 @@ Vagrant.configure(2) do |config|
      git clone --mirror https://github.com/puppetlabs/puppetlabs-websphere
      cd puppetlabs-websphere.git; git update-server-info; cd - 
   SHELL
+
+  config.vm.provision "puppet-apply", type: "shell", inline: <<-SHELL
+     /opt/puppetlabs/puppet/bin/r10k deploy environment -pv
+     /opt/puppetlabs/puppet/bin/puppet apply /etc/puppetlabs/code/environments/development/manifests/site.pp --environment=development
+  SHELL
+
 end
