@@ -74,14 +74,9 @@ Vagrant.configure(2) do |config|
      export FACTER_PUPADIR=$(echo $PWD/vdc-puppet-bootstrap)
      /opt/puppetlabs/puppet/bin/puppet apply ${FACTER_PUPADIR}/manifests/puppet.pp
      /opt/puppetlabs/puppet/bin/puppet apply ${FACTER_PUPADIR}/manifests/r10k.pp
-<<<<<<< HEAD
   SHELL
 
   config.vm.provision "extra", type: "shell", inline: <<-SHELL
-=======
-     /opt/puppetlabs/puppet/bin/r10k deploy environment -pv
-     /opt/puppetlabs/puppet/bin/puppet apply /etc/puppetlabs/code/environments/development/manifests/site.pp --environment=development
->>>>>>> 5878f6e4081dbd79a444d3fd56ebe3c2018459a5
      cd /var/www/html
      rm -rf *.git
      git clone --mirror https://juaningan:20bfa4250edeb51f53834ecd7d9456661cac3441@github.com/Telefonica/vdc-puppet-bootstrap
