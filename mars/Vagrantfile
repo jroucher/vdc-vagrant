@@ -75,7 +75,7 @@ Vagrant.configure(2) do |config|
      /opt/puppetlabs/puppet/bin/puppet apply ${FACTER_PUPADIR}/manifests/puppet.pp
      /opt/puppetlabs/puppet/bin/puppet apply ${FACTER_PUPADIR}/manifests/r10k.pp
      /opt/puppetlabs/puppet/bin/r10k deploy environment -pv
-#     /opt/puppetlabs/puppet/bin/puppet apply /etc/puppetlabs/code/environments/development/manifests/site.pp --environment=development
+     /opt/puppetlabs/puppet/bin/puppet apply /etc/puppetlabs/code/environments/development/manifests/site.pp --environment=development
      cd /var/www/html
      git clone --mirror https://juaningan:20bfa4250edeb51f53834ecd7d9456661cac3441@github.com/Telefonica/vdc-puppet-bootstrap
      cd vdc-puppet-bootstrap.git; git update-server-info; cd - 
