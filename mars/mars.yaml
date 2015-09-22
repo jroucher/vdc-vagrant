@@ -1,2 +1,2 @@
 ---
-vra::role : 'swrepo'
+vra::role : 'role::swrepo'
