@@ -65,9 +65,14 @@ Vagrant.configure(2) do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
-     curl --output /var/tmp/vdc-puppet-bootstrap-development.tar.gz --location http://192.168.33.10/vdc-puppet-bootstrap-development.tar.gz
-     cd /var/tmp; tar xvzf vdc-puppet-bootstrap-development.tar.gz
-     /var/tmp/vdc-puppet-bootstrap-development/pupa-centos
+     zypper --non-interactive --no-gpg-checks addrepo --type yast2 http://192.168.33.10/sles12 sles12
+     zypper --no-gpg-checks refresh 
+     zypper --non-interactive install http://192.168.33.10/puppet-agent-1.2.2-1.sles12.x86_64.rpm
+     zypper --non-interactive install git-core
+     git clone http://192.168.33.10/vdc-puppet-bootstrap.git
+     export FACTER_PUPADIR=$(echo $PWD/vdc-puppet-bootstrap)
+     /opt/puppetlabs/puppet/bin/puppet apply ${FACTER_PUPADIR}/manifests/puppet.pp
+     /opt/puppetlabs/puppet/bin/puppet apply ${FACTER_PUPADIR}/manifests/r10k.pp
      /opt/puppetlabs/puppet/bin/r10k deploy environment -pv
      /opt/puppetlabs/puppet/bin/puppet apply /etc/puppetlabs/code/environments/development/manifests/site.pp --environment=development
   SHELL
