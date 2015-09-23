@@ -1,0 +1,4 @@
+---
+vra::role : 'role::apache'
+vra::DBPass : 'password'
+vra::DBUser : 'wordpress'
