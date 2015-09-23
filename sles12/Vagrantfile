@@ -13,6 +13,7 @@ Vagrant.configure(2) do |config|
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
   config.vm.box = "alchemy-solutions/sles12"
+  config.vm.hostname = "sles12"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -64,7 +65,7 @@ Vagrant.configure(2) do |config|
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  config.vm.provision "shell", inline: <<-SHELL
+  config.vm.provision "bootstrap", type: "shell", inline: <<-SHELL
      zypper --non-interactive --no-gpg-checks addrepo --type yast2 http://192.168.33.10/sles12 sles12
      zypper --no-gpg-checks refresh 
      zypper --non-interactive install http://192.168.33.10/puppet-agent-1.2.2-1.sles12.x86_64.rpm
@@ -73,7 +74,11 @@ Vagrant.configure(2) do |config|
      export FACTER_PUPADIR=$(echo $PWD/vdc-puppet-bootstrap)
      /opt/puppetlabs/puppet/bin/puppet apply ${FACTER_PUPADIR}/manifests/puppet.pp
      /opt/puppetlabs/puppet/bin/puppet apply ${FACTER_PUPADIR}/manifests/r10k.pp
+  SHELL
+
+  config.vm.provision "puppet-apply", type: "shell", inline: <<-SHELL
      /opt/puppetlabs/puppet/bin/r10k deploy environment -pv
+     ln -s /vagrant/$HOSTNAME.lan.yaml /etc/puppetlabs/code/environments/development/hieradata/nodes/$HOSTNAME.lan.yaml
      /opt/puppetlabs/puppet/bin/puppet apply /etc/puppetlabs/code/environments/development/manifests/site.pp --environment=development
   SHELL
 end
