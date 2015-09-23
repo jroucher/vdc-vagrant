@@ -78,7 +78,8 @@ Vagrant.configure(2) do |config|
 
   config.vm.provision "puppet-apply", type: "shell", inline: <<-SHELL
      /opt/puppetlabs/puppet/bin/r10k deploy environment -pv
-     ln -sf /vagrant/$HOSTNAME.lan.yaml /etc/puppetlabs/code/environments/development/hieradata/nodes/$HOSTNAME.lan.yaml
+     FQDN=$(/opt/puppetlabs/bin/facter fqdn)
+     ln -sf /vagrant/$HOSTNAME.yaml /etc/puppetlabs/code/environments/development/hieradata/nodes/$FQDN.yaml
      /opt/puppetlabs/puppet/bin/puppet apply /etc/puppetlabs/code/environments/development/manifests/site.pp --environment=development
   SHELL
 
