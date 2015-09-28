@@ -66,10 +66,15 @@ Vagrant.configure(2) do |config|
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
      zypper --non-interactive --no-gpg-checks addrepo --type yast2 http://192.168.33.10/sles12 sles12
-     zypper --no-gpg-checks refresh
-     zypper --no-gpg-checks update
-     gem install serverspec
+     zypper --non-interactive --no-gpg-checks refresh
+     zypper --non-interactive --no-gpg-checks update
+     cd /home/vagrant
+     wget -–no-check-certificate https://raw.githubusercontent.com/rubygems/rubygems/master/lib/rubygems/ssl_certs/AddTrustExternalCARoot-2048.pem .
+     sudo cp AddTrustExternalCARoot-2048.pem /usr/lib64/ruby/2.1.0/rubygems/ssl_certs/
+     yes | sudo gem install serverspec
      zypper --non-interactive install git-core
+     git config --global http.sslVerify false
+     git clone https://github.com/jroucher/ServerSpec.git
      #zypper --non-interactive install http://192.168.33.10/puppet-agent-1.2.2-1.sles12.x86_64.rpm
      #git clone http://192.168.33.9/vdc-puppet-bootstrap.git
      #export FACTER_PUPADIR=$(echo $PWD/vdc-puppet-bootstrap)
