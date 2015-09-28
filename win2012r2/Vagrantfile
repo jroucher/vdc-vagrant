@@ -5,6 +5,11 @@
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
+Vagrant::Config.run do |config|
+  config.vbguest.auto_update = false
+  config.vbguest.no_remote = true
+end
+
 Vagrant.configure(2) do |config|
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
@@ -74,7 +79,7 @@ Vagrant.configure(2) do |config|
     Set-Location "c:/Program Files/Puppet Labs/Puppet/sys/ruby/bin/"
 #    ./gem install r10k
 #    ./gem install hiera-eyaml
-#    ./gem install deep_merge 
+#    ./gem install deep_merge
 #    md -Path "c:/ProgramData/PuppetLabs/r10k"
 #    Copy-Item "c:/windows/system32/vdc-puppet-bootstrap-development/r10k.yaml" "c:/ProgramData/PuppetLabs/r10k/r10k.yaml"
     ./r10k deploy environment -pv --config c:/ProgramData/PuppetLabs/r10k/r10k.yaml

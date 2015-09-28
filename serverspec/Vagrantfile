@@ -12,7 +12,9 @@ Vagrant.configure(2) do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
-  config.vm.box = "alchemy-solutions/sles12"
+  # config.vm.box = "alchemy-solutions/sles12"
+  config.vm.box = "puppetlabs/centos-6.6-64-nocm"
+  config.vm.hostname = "ServerSpec"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -65,22 +67,31 @@ Vagrant.configure(2) do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
-     zypper --non-interactive --no-gpg-checks addrepo --type yast2 http://192.168.33.10/sles12 sles12
-     zypper --non-interactive --no-gpg-checks refresh
-     zypper --non-interactive --no-gpg-checks update
-     cd /home/vagrant
-     wget -–no-check-certificate https://raw.githubusercontent.com/rubygems/rubygems/master/lib/rubygems/ssl_certs/AddTrustExternalCARoot-2048.pem .
-     sudo cp AddTrustExternalCARoot-2048.pem /usr/lib64/ruby/2.1.0/rubygems/ssl_certs/
-     yes | sudo gem install serverspec
-     zypper --non-interactive install git-core
-     git config --global http.sslVerify false
-     git clone https://github.com/jroucher/ServerSpec.git
-     #zypper --non-interactive install http://192.168.33.10/puppet-agent-1.2.2-1.sles12.x86_64.rpm
-     #git clone http://192.168.33.9/vdc-puppet-bootstrap.git
-     #export FACTER_PUPADIR=$(echo $PWD/vdc-puppet-bootstrap)
-     #/opt/puppetlabs/puppet/bin/puppet apply ${FACTER_PUPADIR}/manifests/puppet.pp
-     #/opt/puppetlabs/puppet/bin/puppet apply ${FACTER_PUPADIR}/manifests/r10k.pp
-     #/opt/puppetlabs/puppet/bin/r10k deploy environment -pv
-     #/opt/puppetlabs/puppet/bin/puppet apply /etc/puppetlabs/code/environments/development/manifests/site.pp --environment=development
+    sudo yum -y install git
+    sudo yum -y install ruby
+    sudo yum groupinstall -y development
+    gpg2 --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+    curl -L get.rvm.io | bash -s stable
+    source /etc/profile.d/rvm.sh
+    rvm reload
+    rvm install 2.1.2
+    rvm use 2.1.2 --default
+    sudo yum -y install rubygems
+    gem install serverspec
+    gem install winrm
+    sudo yum -y update
+    git clone https://github.com/jroucher/ServerSpec.git
+    # -------------------------PASOS EN SUSE 12---------------------------------
+    # zypper --non-interactive --no-gpg-checks addrepo --type yast2 http://192.168.33.10/sles12 sles12
+    # zypper --non-interactive --no-gpg-checks refresh
+    # zypper --non-interactive --no-gpg-checks update
+    # cd /home/vagrant
+    # wget -–no-check-certificate https://raw.githubusercontent.com/rubygems/rubygems/master/lib/rubygems/ssl_certs/AddTrustExternalCARoot-2048.pem .
+    # sudo cp AddTrustExternalCARoot-2048.pem /usr/lib64/ruby/2.1.0/rubygems/ssl_certs/
+    # yes | sudo gem install serverspec
+    # zypper --non-interactive install git-core
+    # git config --global http.sslVerify false
+    # git clone https://github.com/jroucher/ServerSpec.git
+    # -------------------------------------------------------------------------
   SHELL
 end
